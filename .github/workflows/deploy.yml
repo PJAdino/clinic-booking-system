@@ -25,7 +25,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DEBUG: "True"
-        run: python manage.py test bookings
+        run: python manage.py test bookings --keepdb
 
   deploy:
     needs: test
