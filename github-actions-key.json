@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "paul-clinic-booking-2026",
+  "private_key_id": "6a854165e07def90c49bda4f96a06338b6e8e7c7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCpvUhfUH7gYdzZ\n7GDD3fRc+Sk2XOrDoTQ2WNhELZ2suGJzNCH+f1H1tCpAfwAaYSlNtkEgJ+mOMq4P\nKXMM//R+QPeKcrjCC8PQ13cD51PYtJm7szCZVGmk5V8Ga++myyntcEXneO5Yy41o\nfd66k6DvKyOBLS0RsYCajBAtKRvB3G4ChfengnUFkbtDSPmiqo4KD6ZF2x6zSK15\nWTCq/5kWatv8rUGiECVTD46hmpZpoj1wau0mv6XcNtEzmkLcPtHbHzuEt816U9nZ\ny6z7T/bOaHDEBm6juPc9Uc608fV6CQ29ZgKTr83+o63cDXdhnXCSj+T1oK05eRMj\n7uirMKpXAgMBAAECggEAM4oNXR+ofsJIWIVdNmwBJG/lcyPQhvk+TNg6Rq1hKI5O\nGnP0dH29abE8eRv28IubCoUyDi0ATlSWJHVuAT8AwotAfrHp5sXCvfmGolFN1Mm1\nulglBBGtCEw7R8xjVs5umzGRkEDYgm7AL7+0bwuffK+pFrKccjhm98ZarRPD4V9p\ntAhhsusStmF1XnrnZy9YjO8jwBYIi9m1sxoytotyAQdsWLOZFsJRD++zbXHp9vMN\n/pDWG93ElNTzMwseLFKTiY3qN4mNjGmAaFJq2ZMcI5DjyiJuyTj8bw7PXJj0vcfS\nTjXkykEQOmFfNeSWe3kqgZ3saSNGaW1b1p35gWGhzQKBgQDg/yclqAy0f9nPmmCw\nCiHTBvl0odfim9Au7VUz3hVLqmPSmazLAqYKpUSRoC5OUfjP0hbnw2NM5L3v3RJy\ncxa+YCSCHUqcWQQ44LC6rFf+vX5iK66fyz3Bo2jcP/qsHDtIb/SQh9mgDppVHLhy\nnXt0C5WcXL6wBGsUbHp0QIcRawKBgQDBIOgR+fGn+86n1O06oG4G4/vlbXglnLnO\ntyOhZoReaPrApf7C8a28Z0w3JTvXSLvYO4/kD0XG9UdCyavj5SFCd4GtY5iII/4g\njdRJBdB4x/BwkmjXgGTAi5T/+O8PzO8o6BfJDET9QjBYPF9jnctRTTdgnwKogPpz\nPrDBlkqJxQKBgFgWTQNHKcI5E9Ndg2EodlmiL2PkQRstGXJl5Ker2PaIvRAkrivE\n27DrR08kQTzUhu8GN4WBT405OMuB58j7GfpqtaBjS2SuzSJfhZFwC/tlwOc6ZuGU\ntpbrHRCt07wySVtwyXUUWrV5Qh70YZot4blrF6XiAZ3z/OBAICkHYloFAoGABhsc\nOzVDxqPXbMb2mRvpXp5moGJNoiLKXRa9MaUkGjgHdX/KBi/N5l79seCje7L4/WUk\nr3ksI5YtopbtsE7WNlvA5dJ4SBWbOzxAse5VIPxxRZ3bYrTUeqHvHAiqxj0ccpaj\n6d9RbxBgpumBuoyKmQ9v6MYeN2WchXg97mDqCmECgYAmkd5mIzxbgpTu0+7t27ct\npHCVBskRUv2uie6pY12lSfL/dNiYAZpnFwZU1391Mw+zQ+xJBe2g8OzkjfY5SMcM\nrnBfT7xrrnyietCm8TjGl4h64upHXDRyGp26fp9bR1noWh8vZIi+5CXqZdf4Enw2\nSPARdEw/iYEIF4xULCrmig==\n-----END PRIVATE KEY-----\n",
+  "client_email": "github-actions-deployer@paul-clinic-booking-2026.iam.gserviceaccount.com",
+  "client_id": "109859346406413469430",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/github-actions-deployer%40paul-clinic-booking-2026.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
