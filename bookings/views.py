@@ -101,3 +101,10 @@ class AppointmentRescheduleView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+    
+class HealthCheckView(APIView):
+    def get(self, request):
+        return Response(
+            {"status": "ok", "service": "Clinic Booking API"},
+            status=status.HTTP_200_OK,
+        )    
