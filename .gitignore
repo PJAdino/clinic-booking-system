@@ -7,3 +7,4 @@ env/
 *.log
 .vscode/
 .idea/
+github-actions-key-new.json
