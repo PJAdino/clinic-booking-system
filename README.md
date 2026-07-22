@@ -128,6 +128,8 @@ python manage.py test bookings
 python manage.py runserver
 ```
 
+> **Note:** if you run the test suite more than once against the same Postgres instance (e.g. Supabase), you may see `database "test_postgres" already exists`. This happens because Postgres connection poolers can prevent Django's test database from being cleanly dropped after a run. If this occurs, rerun with: `python manage.py test bookings --keepdb`. This does not occur with local SQLite.
+
 ---
 
 ## 5. Deployment & CI/CD
@@ -175,3 +177,4 @@ Deployment hit a real cascading failure that's more instructive than a simple bu
 - No authentication (documented above)
 - Doctor-cancels-a-day bulk cancellation not implemented
 - `GET /patients/{id}/appointments` and the 1-hour booking lockout bonus endpoints not implemented, given time constraints
+- CI/CD deploy job requires a static service account key due to a GCP org policy blocking Workload Identity Federation setup within the available time; WIF would be the more robust long-term approach
