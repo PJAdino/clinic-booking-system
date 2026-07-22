@@ -177,4 +177,4 @@ Deployment hit a real cascading failure that's more instructive than a simple bu
 - No authentication (documented above)
 - Doctor-cancels-a-day bulk cancellation not implemented
 - `GET /patients/{id}/appointments` and the 1-hour booking lockout bonus endpoints not implemented, given time constraints
-- CI/CD deploy job requires a static service account key due to a GCP org policy blocking Workload Identity Federation setup within the available time; WIF would be the more robust long-term approach
+
