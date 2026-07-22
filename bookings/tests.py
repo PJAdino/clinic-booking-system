@@ -1,4 +1,4 @@
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 from django.test import TestCase
 from django.utils import timezone as django_timezone
@@ -12,19 +12,24 @@ from bookings.services import (
     reschedule_appointment,
 )
 
+CLINIC_TZ = ZoneInfo("Africa/Nairobi")
+
 
 class AppointmentTests(TestCase):
 
-    def test_book_appointment(self):
+    def setUp(self):
+        # Anchor all tests to a future date dynamically
+        self.tomorrow = (django_timezone.now().astimezone(CLINIC_TZ) + timedelta(days=1)).date()
 
+    def test_book_appointment(self):
         doctor = Doctor.objects.create(
             full_name="Dr. Alice Mwangi",
-            working_start=time(9, 0),  # 9:00 AM
-            working_end=time(17, 0),  # 5:00 PM
+            working_start=time(9, 0),
+            working_end=time(17, 0),
         )
 
         patient_id = 601
-        slot_time = datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
+        slot_time = datetime.combine(self.tomorrow, time(10, 0), tzinfo=CLINIC_TZ)
 
         appointment = book_appointment(doctor.id, patient_id, slot_time)
 
@@ -33,14 +38,13 @@ class AppointmentTests(TestCase):
         self.assertEqual(appointment.status, "booked")
 
     def test_cannot_book_same_slot_twice(self):
-
         doctor = Doctor.objects.create(
             full_name="Dr. Alice Mwangi",
             working_start=time(9, 0),
             working_end=time(17, 0),
         )
 
-        slot_time = datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
+        slot_time = datetime.combine(self.tomorrow, time(10, 0), tzinfo=CLINIC_TZ)
         patient_id = 1
 
         book_appointment(doctor.id, patient_id, slot_time)
@@ -61,14 +65,8 @@ class AppointmentTests(TestCase):
             working_end=time(17, 0),
         )
 
-        slot_time = datetime(
-            2026,
-            7,
-            20,
-            7,
-            0,  # 7:00 AM — before working_start of 9:00
-            tzinfo=ZoneInfo("Africa/Nairobi"),
-        )
+        # 7:00 AM on tomorrow's date — in the future, but outside working hours (9:00 - 17:00)
+        slot_time = datetime.combine(self.tomorrow, time(7, 0), tzinfo=CLINIC_TZ)
 
         with self.assertRaises(BookingError) as context:
             book_appointment(doctor.id, 1, slot_time)
@@ -95,7 +93,7 @@ class AppointmentTests(TestCase):
             working_start=time(9, 0),
             working_end=time(17, 0),
         )
-        slot_time = datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
+        slot_time = datetime.combine(self.tomorrow, time(10, 0), tzinfo=CLINIC_TZ)
         appointment = book_appointment(doctor.id, 1, slot_time)
 
         cancelled = cancel_appointment(appointment.id, "Patient requested cancellation")
@@ -111,7 +109,7 @@ class AppointmentTests(TestCase):
             working_start=time(9, 0),
             working_end=time(17, 0),
         )
-        slot_time = datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
+        slot_time = datetime.combine(self.tomorrow, time(10, 0), tzinfo=CLINIC_TZ)
         appointment = book_appointment(doctor.id, 1, slot_time)
         cancel_appointment(appointment.id, "First cancellation")
 
@@ -126,8 +124,8 @@ class AppointmentTests(TestCase):
             working_start=time(9, 0),
             working_end=time(17, 0),
         )
-        original_slot = datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
-        new_slot = datetime(2026, 7, 20, 11, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
+        original_slot = datetime.combine(self.tomorrow, time(10, 0), tzinfo=CLINIC_TZ)
+        new_slot = datetime.combine(self.tomorrow, time(11, 0), tzinfo=CLINIC_TZ)
 
         appointment = book_appointment(doctor.id, 1, original_slot)
 
@@ -138,7 +136,6 @@ class AppointmentTests(TestCase):
         self.assertEqual(rescheduled.doctor, doctor)
         self.assertEqual(rescheduled.patient_id, 1)
 
-        # confirm the original slot was actually freed (no longer a booked row blocking it)
         original = Appointment.objects.get(id=appointment.id)
         self.assertEqual(original.status, "cancelled")
 
@@ -148,20 +145,17 @@ class AppointmentTests(TestCase):
             working_start=time(9, 0),
             working_end=time(17, 0),
         )
-        original_slot = datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
-        taken_slot = datetime(2026, 7, 20, 11, 0, tzinfo=ZoneInfo("Africa/Nairobi"))
+        original_slot = datetime.combine(self.tomorrow, time(10, 0), tzinfo=CLINIC_TZ)
+        taken_slot = datetime.combine(self.tomorrow, time(11, 0), tzinfo=CLINIC_TZ)
 
         appointment = book_appointment(doctor.id, 1, original_slot)
-        book_appointment(
-            doctor.id, 2, taken_slot
-        )  # another patient already holds 11:00
+        book_appointment(doctor.id, 2, taken_slot)
 
         with self.assertRaises(BookingError) as context:
             reschedule_appointment(appointment.id, taken_slot)
 
         self.assertEqual(context.exception.code, "slot_taken")
 
-        # confirm the original appointment is untouched — atomicity/rollback worked
         original = Appointment.objects.get(id=appointment.id)
         self.assertEqual(original.status, "booked")
         self.assertEqual(original.slot_time, original_slot)
@@ -170,14 +164,12 @@ class AppointmentTests(TestCase):
         doctor = Doctor.objects.create(
             full_name="Dr. Alice Mwangi",
             working_start=time(9, 0),
-            working_end=time(
-                11, 0
-            ),  # small window: 9:00, 9:30, 10:00, 10:30 → 4 possible slots
+            working_end=time(11, 0),
         )
-        booked_slot = datetime(2026, 7, 20, 9, 30, tzinfo=ZoneInfo("Africa/Nairobi"))
+        booked_slot = datetime.combine(self.tomorrow, time(9, 30), tzinfo=CLINIC_TZ)
         book_appointment(doctor.id, 1, booked_slot)
 
-        free_slots = get_availability(doctor.id, date(2026, 7, 20))
+        free_slots = get_availability(doctor.id, self.tomorrow)
 
-        self.assertEqual(len(free_slots), 3)  # 4 possible minus 1 booked
+        self.assertEqual(len(free_slots), 3)
         self.assertNotIn(booked_slot, free_slots)
