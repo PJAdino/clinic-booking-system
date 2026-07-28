@@ -24,7 +24,7 @@ class AppointmentsView(APIView):
     def post(self, request):
         doctor_id = request.data.get("doctor_id")
         patient_id = request.data.get("patient_id")
-        slot_time = request.data.get("slot_time")
+        slot_time = parse_datetime(request.data.get("slot_time"))
 
         try:
             appointment = book_appointment(doctor_id, patient_id, slot_time)
