@@ -106,26 +106,19 @@ def cancel_appointment(appointment_id: int, reason: str) -> Appointment:
 
 
 def reschedule_appointment(appointment_id: int, new_slot_time: datetime) -> Appointment:
-    """
-    Moves an appointment to a new slot as a single atomic transaction.
-    If the new slot can't be claimed (validation failure or a
-    concurrent booking caught by the DB constraint), the whole
-    operation rolls back and the original appointment is untouched.
-    """
     try:
-        original = Appointment.objects.select_for_update().get(id=appointment_id)
+        original = Appointment.objects.get(id=appointment_id)
     except Appointment.DoesNotExist:
         raise BookingError("Appointment not found.", code="not_found")
 
     if original.status == Appointment.Status.CANCELLED:
-        raise BookingError(
-            "Cannot reschedule a cancelled appointment.", code="already_cancelled"
-        )
+        raise BookingError("Cannot reschedule a cancelled appointment.", code="already_cancelled")
 
     _validate_slot(original.doctor, new_slot_time)
 
     try:
         with transaction.atomic():
+            original = Appointment.objects.select_for_update().get(id=appointment_id)
             original.status = Appointment.Status.CANCELLED
             original.cancellation_reason = "Rescheduled to a new slot."
             original.save()
@@ -137,9 +130,7 @@ def reschedule_appointment(appointment_id: int, new_slot_time: datetime) -> Appo
                 status=Appointment.Status.BOOKED,
             )
     except IntegrityError:
-        raise BookingError(
-            "The new slot was just booked by someone else.", code="slot_taken"
-        )
+        raise BookingError("The new slot was just booked by someone else.", code="slot_taken")
 
     return new_appointment
 
