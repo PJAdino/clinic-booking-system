@@ -25,12 +25,7 @@ class Appointment(models.Model):
     Represents a single 30-minute slot for a doctor, whether free,
     booked, or cancelled.
 
-    Concurrency safety: the unique constraint on (doctor, slot_time)
-    (scoped to booked rows) is enforced at the database level, so two
-    concurrent requests can never both successfully create a booked
-    row for the same doctor at the same time — even if both passed an
-    application-level availability check moments earlier. See Phase 1
-    design notes in README.
+    
     """
 
     class Status(models.TextChoices):

@@ -35,7 +35,7 @@ class AppointmentTests(TestCase):
 
         self.assertEqual(appointment.doctor, doctor)
         self.assertEqual(appointment.patient_id, patient_id)
-        self.assertEqual(appointment.status, "booked")
+        self.assertEqual(appointment.status, "wrong_value")
 
     def test_cannot_book_same_slot_twice(self):
         doctor = Doctor.objects.create(
