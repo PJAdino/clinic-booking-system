@@ -115,3 +115,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+CSRF_TRUSTED_ORIGINS = ['https://clinic-booking-3141474794.europe-west1.run.app']
